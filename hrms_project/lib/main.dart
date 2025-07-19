@@ -5,6 +5,7 @@ import 'package:hrms_project/modules/Employee/providers/employee_provider.dart';
 import 'package:hrms_project/modules/Employee/providers/leave_provider.dart';
 import 'package:hrms_project/modules/Employee/screens/employee_dashboard.dart';
 import 'package:hrms_project/modules/HR/providers/hr_attendance_provider.dart';
+import 'package:hrms_project/modules/HR/providers/hr_candidates_provider.dart';
 import 'package:hrms_project/modules/HR/providers/hr_employee_provider.dart';
 import 'package:hrms_project/modules/HR/providers/hr_leave_requests_provider.dart';
 import 'package:hrms_project/modules/HR/screens/hr_dashboard_screen.dart';
@@ -30,6 +31,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => CandidateProvider()),
+        ChangeNotifierProvider(create: (_) => HrCandidatesProvider()),
         ChangeNotifierProvider(create: (_) => LeaveProvider()),
         ChangeNotifierProvider(create: (_) => EmployeeProvider()),
         ChangeNotifierProvider(create: (_) => AttendanceProvider()),
@@ -74,7 +76,7 @@ class MyApp extends StatelessWidget {
 }
 
 class ThemeProvider with ChangeNotifier {
-  ThemeMode _themeMode = ThemeMode.light;
+  final ThemeMode _themeMode = ThemeMode.light;
 
   ThemeMode get themeMode => _themeMode;
 

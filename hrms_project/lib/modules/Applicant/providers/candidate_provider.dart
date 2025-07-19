@@ -14,6 +14,8 @@ class CandidateProvider with ChangeNotifier {
     email: '',
     phone: '',
     domainPreference: '',
+    resumeUrl: '',
+    status: 'Pending',
   );
 
   Candidate get candidate => _candidate;
@@ -52,34 +54,6 @@ class CandidateProvider with ChangeNotifier {
     }
   }
 
-  Future<void> uploadCnic() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
-    );
-    if (result != null && result.files.single.path != null) {
-      final filePath = result.files.single.path!;
-      final url = await _uploadFile(filePath, 'cnic');
-      _candidate.cnicUrl = url;
-      notifyListeners();
-    }
-  }
-
-  Future<void> uploadCertificates() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
-      allowMultiple: true,
-    );
-    if (result != null && result.paths.isNotEmpty) {
-      final urls = await Future.wait(
-        result.paths.whereType<String>().map((p) => _uploadFile(p, 'certificates')),
-      );
-      _candidate.certificatesUrls = urls;
-      notifyListeners();
-    }
-  }
-
   Future<String> _uploadFile(String filePath, String folder) async {
     final file = File(filePath);
     final fileName = '${DateTime.now().millisecondsSinceEpoch}_${file.uri.pathSegments.last}';
@@ -90,7 +64,7 @@ class CandidateProvider with ChangeNotifier {
 
   Future<void> submitApplication() async {
     if (!_candidate.isComplete) {
-      throw Exception('Please fill all required fields and upload files');
+      throw Exception('Please fill all required fields and upload resume');
     }
     await _firestore.collection('candidates').add(_candidate.toMap());
     _resetForm();
@@ -106,6 +80,8 @@ class CandidateProvider with ChangeNotifier {
       email: '',
       phone: '',
       domainPreference: '',
+      resumeUrl: '',
+      status: 'Pending',
     );
     notifyListeners();
   }

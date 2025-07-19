@@ -1,12 +1,10 @@
 class Candidate {
-  String? id; // Firestore document ID
+  String? id;
   String fullName;
   String email;
   String phone;
   String domainPreference;
   String? resumeUrl;
-  String? cnicUrl;
-  List<String> certificatesUrls;
   DateTime submissionDate;
   String status;
 
@@ -17,10 +15,8 @@ class Candidate {
     required this.phone,
     required this.domainPreference,
     this.resumeUrl,
-    this.cnicUrl,
-    this.certificatesUrls = const [],
     DateTime? submissionDate,
-    this.status = 'Submitted',
+    this.status = 'Pending',
   }) : submissionDate = submissionDate ?? DateTime.now();
 
   factory Candidate.fromMap(Map<String, dynamic> data, String id) {
@@ -31,12 +27,10 @@ class Candidate {
       phone: data['phone'] ?? '',
       domainPreference: data['domainPreference'] ?? '',
       resumeUrl: data['resumeUrl'],
-      cnicUrl: data['cnicUrl'],
-      certificatesUrls: List<String>.from(data['certificatesUrls'] ?? []),
       submissionDate: data['submissionDate'] != null
           ? DateTime.parse(data['submissionDate'])
           : DateTime.now(),
-      status: data['status'] ?? 'Submitted',
+      status: data['status'] ?? 'Pending',
     );
   }
 
@@ -47,8 +41,6 @@ class Candidate {
       'phone': phone,
       'domainPreference': domainPreference,
       'resumeUrl': resumeUrl,
-      'cnicUrl': cnicUrl,
-      'certificatesUrls': certificatesUrls,
       'submissionDate': submissionDate.toIso8601String(),
       'status': status,
     };
@@ -59,7 +51,6 @@ class Candidate {
         email.isNotEmpty &&
         phone.isNotEmpty &&
         domainPreference.isNotEmpty &&
-        resumeUrl != null &&
-        cnicUrl != null;
+        resumeUrl != null;
   }
 }

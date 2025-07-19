@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:hrms_project/main.dart';
 import 'package:hrms_project/modules/auth/login.dart';
 import '../providers/candidate_provider.dart';
 
@@ -149,7 +148,7 @@ class _CandidateApplicationScreenState extends State<CandidateApplicationScreen>
                           prefixIcon: Icon(Icons.work, color: theme.colorScheme.primary),
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                           filled: true,
-                          fillColor: theme.colorScheme.surfaceVariant,
+                          fillColor: theme.colorScheme.surfaceContainerHighest,
                         ),
                         style: TextStyle(color: textColor),
                         dropdownColor: theme.colorScheme.surface,
@@ -173,24 +172,6 @@ class _CandidateApplicationScreenState extends State<CandidateApplicationScreen>
                         label: 'Upload Resume',
                         fileLabel: candidate.resumeUrl,
                         onPressed: provider.uploadResume,
-                      ),
-                      const SizedBox(height: 16),
-                      _fileButton(
-                        context,
-                        icon: Icons.credit_card,
-                        label: 'Upload CNIC',
-                        fileLabel: candidate.cnicUrl,
-                        onPressed: provider.uploadCnic,
-                      ),
-                      const SizedBox(height: 16),
-                      _fileButton(
-                        context,
-                        icon: Icons.badge,
-                        label: 'Upload Certificates',
-                        fileLabel: candidate.certificatesUrls.isNotEmpty
-                            ? '${candidate.certificatesUrls.length} files uploaded'
-                            : null,
-                        onPressed: provider.uploadCertificates,
                       ),
                       const SizedBox(height: 32),
 
@@ -233,17 +214,14 @@ class _CandidateApplicationScreenState extends State<CandidateApplicationScreen>
     );
   }
 
-  Widget _buildTextField(
-    BuildContext context, {
-    required String initialValue,
-    required String label,
-    required IconData icon,
-    required TextInputType keyboard,
-    required Function(String) onChanged,
-  }) {
+  Widget _buildTextField(BuildContext context,
+      {required String initialValue,
+      required String label,
+      required IconData icon,
+      required TextInputType keyboard,
+      required Function(String) onChanged}) {
     final theme = Theme.of(context);
     final textColor = theme.colorScheme.onSurface;
-
     return TextFormField(
       initialValue: initialValue,
       keyboardType: keyboard,
@@ -262,23 +240,20 @@ class _CandidateApplicationScreenState extends State<CandidateApplicationScreen>
           borderSide: BorderSide(color: Colors.cyan.shade600, width: 2),
         ),
         filled: true,
-        fillColor: theme.colorScheme.surfaceVariant,
+        fillColor: theme.colorScheme.surfaceContainerHighest,
       ),
       validator: (v) => v == null || v.isEmpty ? 'Required field' : null,
       onChanged: onChanged,
     );
   }
 
-  Widget _fileButton(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required String? fileLabel,
-    required VoidCallback onPressed,
-  }) {
+  Widget _fileButton(BuildContext context,
+      {required IconData icon,
+      required String label,
+      required String? fileLabel,
+      required VoidCallback onPressed}) {
     final theme = Theme.of(context);
     final textColor = theme.colorScheme.onSurface;
-
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -319,14 +294,12 @@ class _CandidateApplicationScreenState extends State<CandidateApplicationScreen>
   Future<void> _submit(BuildContext context) async {
     if (!_formKey.currentState!.validate()) return;
     final provider = Provider.of<CandidateProvider>(context, listen: false);
-
     if (!provider.candidate.isComplete) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please upload all required files')),
+        const SnackBar(content: Text('Please upload resume')),
       );
       return;
     }
-
     try {
       await provider.submitApplication();
       if (!mounted) return;
